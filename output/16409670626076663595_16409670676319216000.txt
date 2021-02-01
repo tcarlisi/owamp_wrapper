@@ -1,0 +1,11 @@
+
+--- owping statistics from [localhost]:8826 to [127.0.0.1]:9126 ---
+SID:	7f000001e3badc7ce71e8e0a50386f25
+first:	2021-01-26T19:22:54.017
+last:	2021-01-26T19:23:05.715
+100 sent, 0 lost (0.000%), 0 duplicates
+one-way delay min/median/max = 0.0229/0.1/0.126 ms, (err=0.00201 ms)
+one-way jitter = 0.1 ms (P95-P50)
+TTL not reported
+no reordering
+

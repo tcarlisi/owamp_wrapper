@@ -1,0 +1,18 @@
+FIREWALL
+
+	If you are working with firewalls, you will need to open the appropriate ports for
+	communication and testing:
+	•
+	•
+	TCP/861
+	UDP/ephemeral
+	(Control communication)
+	(Settable using testports configuration in owampd.conf)
+	To do this using iptables, the additional arguments would look something like:
+	-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport
+	861 -j ACCEPT
+	-A RH-Firewall-1-INPUT -p udp -j ACCEPT
+
+Limits
+	
+	Limit profiles should be changed in owampd.limits
