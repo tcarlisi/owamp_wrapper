@@ -13,15 +13,15 @@ class OwampClient():
     TODO : Doc
     """
     def __init__(self, 
-                ip_address,
-                ip_version=0, 
-                nb_packets=100, 
-                schedule="0.1e",
-                authentication ="AEO",
-                port_range="",
-                dhcp_value=""):
+                address,
+                ip_version, 
+                nb_packets, 
+                schedule,
+                authentication,
+                port_range,
+                dhcp_value):
 
-        self.ip_address = ip_address
+        self.address = address
         self.ip_version = ip_version
         self.nb_packets = nb_packets
         self.schedule = schedule
@@ -32,10 +32,9 @@ class OwampClient():
         print("OWAMP Client initialization...")
 
     def owping(self):
+        print("yop")
         cmd = (
-            "../Implementation/executables/bin/owping " + self.ip_address + ":8765"
-            # -D Dscp_val
-            # - 4 ou -6
+            "../Implementation/executables/bin/owping " + self.address + ":8765"
             + " -c " + str(self.nb_packets)
             + " -i " + self.schedule
             + " -A " + self.authentication)
@@ -60,8 +59,8 @@ class OwampClient():
 
         owamp_stats = OwampStats()
         owamp_stats.collect_stats(stdout)
-        owamp_stats._debug_print_stats()
-        print(exit_code, "Thread Done")
+        print("Exit code:", exit_code)
+        return owamp_stats
     
     def owping_thread(self):
         thread = threading.Thread(target=self.owping)
