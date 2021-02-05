@@ -8,7 +8,7 @@ cd owamp/I2util
 
 #Requirement : Install Automake if needed !!!!
 libtoolize --force
-aclocal
+aclaloc
 autoheader
 automake --force-missing --add-missing
 autoconf
