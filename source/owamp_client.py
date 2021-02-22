@@ -5,34 +5,30 @@ owamp_client.py
 """
 import shlex
 from owamp_stats import OwampStats
+from config_store import Config_store
 import threading
 from subprocess import Popen, PIPE
 
 class OwampClient():
     """
-    TODO : Doc
+    Launch an owamp ping with the configuration indicated in config.ini
     """
-    def __init__(self, 
-                address,
-                ip_version, 
-                nb_packets, 
-                schedule,
-                authentication,
-                port_range,
-                dhcp_value):
+    def __init__(self, address, config_store: Config_store):
 
-        self.address = address
-        self.ip_version = ip_version
-        self.nb_packets = nb_packets
-        self.schedule = schedule
-        self.authentication = authentication 
-        self.port_range = port_range  
-        self.dhcp_value = dhcp_value         
+        self.address = address                              # the target address of the owping
+        self.ip_version = config_store.ip_version           # ip protocol version (0, 4 or 6)
+        self.nb_packets = config_store.nb_packets           # nb of packets per stream test
+        self.schedule = config_store.schedule               # schedule of stream test
+        self.authentication = config_store.authentication   # auth mode
+        self.port_range = config_store.port_range           # port range for stream test
+        self.dhcp_value = config_store.dhcp_value           # dhcp value for stream test
         
-        print("OWAMP Client initialization...")
+        print("Dev: OWAMP Client initialization...")
 
     def owping(self):
-        print("yop")
+        """
+        Execute the owping and return the statistics (as OwampStats object)
+        """
         cmd = (
             "../Implementation/executables/bin/owping " + self.address + ":8765"
             + " -c " + str(self.nb_packets)
@@ -52,18 +48,15 @@ class OwampClient():
             cmd += " -D " + self.dhcp_value
 
 
-        process = Popen(shlex.split(cmd), stdout=PIPE)
+        # Execution of Owping
+        process = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
         stdout, errs = process.communicate()
         exit_code = process.wait()
-        stdout = stdout.decode("utf-8")
 
+        # Analalyze statistics
+        stdout = stdout.decode("utf-8")
         owamp_stats = OwampStats()
-        owamp_stats.collect_stats(stdout)
-        print("Exit code:", exit_code)
+        owamp_stats.collect_stats(exit_code, self.address, stdout)
+
         return owamp_stats
-    
-    def owping_thread(self):
-        thread = threading.Thread(target=self.owping)
-        thread.start()
-        return thread
 

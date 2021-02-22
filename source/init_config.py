@@ -1,27 +1,29 @@
 """
 init_config.py
-    Initialize configuratio for OWAMP/TWAMP
+    Initialize configuration for OWAMP/TWAMP
 @author: Thomas Carlisi
 """
 
 import fileinput
+from config_store import Config_store
 
 class InitConfig():
     """
-    TODO : Doc
+    Modify the configuration files of the C owamp implementation
+    from the configuration file values of the Dx-agent project
     """
-    def __init__(self, user, group, dir_pid, dir_test):
-        self.user = user
-        self.group = group
-        self.dir_pid = dir_pid
-        self.dir_test = dir_test
-        print("OWAMP Config initialization...")
+    def __init__(self, config_store: Config_store):
+        self.config_store = config_store        # structure containing the config.ini values
+        print("Dev: OWAMP Config initialization...")
     
     def init_config(self):
-        self._change_config_line("../Implementation/config/owampd.conf", "user", self.user)
-        self._change_config_line("../Implementation/config/owampd.conf", "group", self.group)
-        self._change_config_line("../Implementation/config/owampd.conf", "vardir", self.dir_pid)
-        self._change_config_line("../Implementation/config/owampd.conf", "datadir", self.dir_test)
+        """
+        Modify the C owamp implementation configuration
+        """
+        self._change_config_line("../Implementation/config/owampd.conf", "user", self.config_store.user)
+        self._change_config_line("../Implementation/config/owampd.conf", "group", self.config_store.group)
+        self._change_config_line("../Implementation/config/owampd.conf", "vardir", self.config_store.dir_pid)
+        self._change_config_line("../Implementation/config/owampd.conf", "datadir", self.config_store.dir_test)
 
     def _change_config_line(self, filename, prefix, value):
         try:
@@ -38,5 +40,5 @@ class InitConfig():
                 print(line, end="")
             fileinput.close()
         except Exception as err:
-            #TODO : check catch and change msg
-            print(err)
+            message = "configuration initialization failed:  {}\n".format(err)
+            raise Exception(message) from err
