@@ -16,7 +16,6 @@ class OwampServer():
     """
     def __init__(self, dir_pid):
         self.dir_pid = dir_pid          # directory containing the pid file of the server process
-        print("Dev: OWAMP Server initialization...")
 
     def launch_owampd(self):
         """
@@ -28,11 +27,14 @@ class OwampServer():
         Execption can be raised if the initializer owampd process return a bad exit code
         """
         cmd = "../Implementation/executables/bin/owampd -c ../Implementation/config"
-        process = Popen(shlex.split(cmd), stdout=PIPE)
-        process.communicate()
+        process = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate()
         exit_code = process.wait()
+        stdout = stdout.decode("utf-8")
+        stderr = stderr.decode("utf-8")
         if exit_code != 0:
             message = "the owamp server initialization process ended with bad exit code"
+            message += "owamp server (owampd) error message:" + stderr + stdout
             raise Exception(message)
 
     def close_owampd(self):

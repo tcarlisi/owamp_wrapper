@@ -22,8 +22,7 @@ class OwampClient():
         self.authentication = config_store.authentication   # auth mode
         self.port_range = config_store.port_range           # port range for stream test
         self.dhcp_value = config_store.dhcp_value           # dhcp value for stream test
-        
-        print("Dev: OWAMP Client initialization...")
+        self.pfsfile = config_store.pfsfile
 
     def owping(self):
         """
@@ -33,7 +32,8 @@ class OwampClient():
             "../Implementation/executables/bin/owping " + self.address + ":8765"
             + " -c " + str(self.nb_packets)
             + " -i " + self.schedule
-            + " -A " + self.authentication)
+            + " -A " + self.authentication
+            + " -k " + self.pfsfile)
             
         if not self.ip_version == 0:
             if self.ip_version == 4:
@@ -46,17 +46,19 @@ class OwampClient():
 
         if self.dhcp_value:
             cmd += " -D " + self.dhcp_value
+        
 
 
         # Execution of Owping
         process = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
-        stdout, errs = process.communicate()
+        stdout, stderr = process.communicate()
         exit_code = process.wait()
 
         # Analalyze statistics
         stdout = stdout.decode("utf-8")
+        stderr = stderr.decode("utf-8")
         owamp_stats = OwampStats()
         owamp_stats.collect_stats(exit_code, self.address, stdout)
 
-        return owamp_stats
+        return (owamp_stats, stderr)
 

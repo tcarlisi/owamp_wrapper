@@ -8,17 +8,20 @@ import sys
 import time 
 import signal
 
-from owamp_api import OwampApi, InputError
+from owamp_api import OwampApi, InputError, OwampStats
 
 def main():
 
     owamp = OwampApi()
     try:
         # Get info from config.ini and configure owamp
-        owamp.configure()
+        print("Dev: OWAMP Config initialization...")
+        owamp.configure("../config.ini")
         # Start Owamp Server
         owamp.start_server()
-    except (InputError, Exception) as err:
+        print("Dev: OWAMP Server started...")
+
+    except (InputError, KeyError, Exception) as err:
         sys.stderr.write(str(err))
         sys.exit(1)
 
@@ -30,11 +33,16 @@ def main():
         owamp.stop_owping_scheduler()
         sys.exit(0)
 
-    # TODO : GET LIST
-    address_list = ["127.0.0.1", "127.0.0.1"]
+    def scheduler_callback(owamp_stats:OwampStats):
+        print("Job worked")
+        owamp_stats._debug_print_stats()
+
+    def scheduler_callback_fail():
+        print("Job failed")
 
     # Launch Owping (clients) Scheduler
-    owamp.start_owping_scheduler(address_list)
+    owamp.start_owping_scheduler(scheduler_callback, scheduler_callback_fail)
+    print("Dev: Owmping scheduler started..")
     signal.signal(signal.SIGINT, signal_handler)
 
     # Infinite Loop

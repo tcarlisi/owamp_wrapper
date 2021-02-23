@@ -14,7 +14,6 @@ class InitConfig():
     """
     def __init__(self, config_store: Config_store):
         self.config_store = config_store        # structure containing the config.ini values
-        print("Dev: OWAMP Config initialization...")
     
     def init_config(self):
         """
