@@ -110,7 +110,7 @@ class OwampApi():
         self.server.close_owampd()
 
     def start_owping_scheduler(self, callback, callback_fail):
-        """port shlex
+        """
         Start the owmping scheduler. (the configuration MUST have been done before)
         It executes a ping at a fixed rate.
         (One ping per address in the list)

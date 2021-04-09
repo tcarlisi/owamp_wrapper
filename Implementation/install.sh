@@ -17,5 +17,3 @@ autoreconf -f -i
 ./configure --prefix ~/Documents/TFE/OWAMP_Wrapper/Implementation/executables
 make
 make install
-
-

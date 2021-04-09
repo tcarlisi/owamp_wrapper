@@ -18,14 +18,12 @@ class OwpingScheduler():
 
     def __init__(self, config_store: Config_store, callback: callable, callback_fail : callable):
         self.config_store = config_store                # config store
-        self.callback = callback
-        self.callback_fail = callback_fail
-        # cf. ConfigStore fields for documentation
-        self.address_list = config_store.address_list
-        self.schedule = config_store.schedule
-
-        self.scheduler = BackgroundScheduler()  # scheduler
-        self.owpingers = []                     # list of owamp clients
+        self.callback = callback                        # callback function when job done
+        self.callback_fail = callback_fail              # callback function when job failed
+        self.address_list = config_store.address_list   # address list to ping
+        self.schedule = config_store.schedule           # schedule of pings
+        self.scheduler = BackgroundScheduler()          # scheduler
+        self.owpingers = []                             # list of owamp clients
 
     def start_owping_scheduler(self):
         """
