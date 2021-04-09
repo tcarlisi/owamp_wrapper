@@ -87,7 +87,7 @@ class OwampApi():
         if not self.config_store:
             raise Exception("Error owamp: the configuration of the server has not been done\n")
 
-        self.server = OwampServer(self.config_store.dir_pid)
+        self.server = OwampServer(self.config_store)
         try:
             self.server.launch_owampd()
         except Exception as err:

@@ -19,10 +19,11 @@ class InitConfig():
         """
         Modify the C owamp implementation configuration
         """
-        self._change_config_line("../Implementation/config/owampd.conf", "user", self.config_store.user)
-        self._change_config_line("../Implementation/config/owampd.conf", "group", self.config_store.group)
-        self._change_config_line("../Implementation/config/owampd.conf", "vardir", self.config_store.dir_pid)
-        self._change_config_line("../Implementation/config/owampd.conf", "datadir", self.config_store.dir_test)
+        conf_file = self.config_store.server_config_dir + "/owamp-server.conf"
+        self._change_config_line(conf_file, "user", self.config_store.user)
+        self._change_config_line(conf_file, "group", self.config_store.group)
+        self._change_config_line(conf_file, "vardir", self.config_store.dir_pid)
+        self._change_config_line(conf_file, "datadir", self.config_store.dir_test)
 
     def _change_config_line(self, filename, prefix, value):
         try:

@@ -14,8 +14,10 @@ class OwampServer():
     """
     Execute the owamp server process (owampd) with the previously chosen configuration
     """
-    def __init__(self, dir_pid):
-        self.dir_pid = dir_pid          # directory containing the pid file of the server process
+    def __init__(self, config_store):
+        self.dir_pid = config_store.dir_pid                         # directory containing the pid file of the server process
+        self.owamp_executable = config_store.owamp_executable       # owampd executable
+        self.server_config_dir = config_store.server_config_dir     # server config directory
 
     def launch_owampd(self):
         """
@@ -26,7 +28,7 @@ class OwampServer():
 
         Execption can be raised if the initializer owampd process return a bad exit code
         """
-        cmd = "../Implementation/executables/bin/owampd -c ../Implementation/config"
+        cmd = self.owamp_executable + " -c "+ self.server_config_dir
         process = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate()
         exit_code = process.wait()

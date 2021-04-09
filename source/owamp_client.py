@@ -19,21 +19,22 @@ class OwampClient():
         self.ip_version = config_store.ip_version           # ip protocol version (0, 4 or 6)
         self.nb_packets = config_store.nb_packets           # nb of packets per stream test
         self.schedule = config_store.schedule               # schedule of stream test
-        self.authentication = config_store.authentication   # auth mode
         self.port_range = config_store.port_range           # port range for stream test
         self.dhcp_value = config_store.dhcp_value           # dhcp value for stream test
-        self.pfsfile = config_store.pfsfile
+        self.pfsfile = config_store.pfsfile                 # pfs file to authenticate client
+        self.executable = config_store.owping_executable   # owping executable
 
     def owping(self):
         """
         Execute the owping and return the statistics (as OwampStats object)
         """
         cmd = (
-            "../Implementation/executables/bin/owping " + self.address + ":8765"
+            self.executable + " " + self.address + ":8765"
             + " -c " + str(self.nb_packets)
             + " -i " + self.schedule
-            + " -A " + self.authentication
+            + " -u admin"
             + " -k " + self.pfsfile)
+            
             
         if not self.ip_version == 0:
             if self.ip_version == 4:

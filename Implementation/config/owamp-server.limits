@@ -143,21 +143,19 @@
 #		paradise.
 
 # setup the root node with unlimited disk and bandwidth
-limit root with disk=0,\
-		bandwidth=0,\
-                delete_on_fetch=on
-                
-# Pinger
-limit pinger with parent=root,\
-		disk=10G,\
-		bandwidth=20M
+limit root with \
+	disk=100M, \
+	bandwidth=0, \
+	delete_on_fetch=on, \
+	allow_open_mode=off
 
-# Limit non-authorized users to 10G of disk storage, and 1M of bandwidth
-# (overall for all non-authorized users). Unspecified values default to
-# parent permissions
-limit regular with parent=root,\
-		disk=10G,\
-		bandwidth=20M
+limit jail with \
+             parent=root, \
+             bandwidth=1, \
+             disk=1, \
+             allow_open_mode=off
+
 
 # Default everything to regular user access
-assign default regular
+assign user admin root
+assign default jail

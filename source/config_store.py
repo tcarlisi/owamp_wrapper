@@ -4,6 +4,9 @@ config_store.py
 @author: Thomas Carlisi
 """
 
+import re 
+import fnmatch
+
 import configparser
 
 class InputError(Exception):
@@ -24,14 +27,16 @@ class Config_store():
 
         # Server information
         conf_server = config_object["CONFIG-SERVER"]
-        self.user = conf_server["user"]                     # user that will execute the owamp server
-        self.group = conf_server["group"]                   # group that will execute the owamp server
-        self.dir_pid = conf_server["dir_pid"]               # directory that will contain the owampd pid file
-        self.dir_test = conf_server["dir_test"]             # directory that will contain test temporary files
+        self.owamp_executable = conf_server["owamp_executable"]     # owamp executable
+        self.user = conf_server["user"]                             # user that will execute the owamp server
+        self.group = conf_server["group"]                           # group that will execute the owamp server
+        self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
+        self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
+        self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
 
         # Client information
         conf_client = config_object["CONFIG-CLIENT"]
-
+        self.owping_executable = conf_client["owping_executable"]   # owping executable
         self.address_list = conf_client["address_list"].split(",")  # list of address list to ping
         ipv = int(conf_client["ip_version"])
         if ipv != 0 and ipv != 4 and ipv != 6:
@@ -45,10 +50,20 @@ class Config_store():
         else:
             self.nb_packets = int(nbp)                              # nb of packets for each test stream
 
-        # TODO: check!
-        self.pfsfile = conf_client["pfsfile"]                       # the client pfs file
+        pfs = conf_client["pfsfile"] 
+        if not fnmatch.fnmatch(pfs, '*.pfs'):
+            raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
+        self.pfsfile = pfs                                          # the client pfs file
+
+        # Checked by owping program
         self.schedule = conf_client["schedule"]                     # the schedule of the test stream
-        self.authentication = conf_client["authentication"]         # the authentication mode
-        self.port_range = conf_client["port_range"]                 # port range for test stream
+        
+        pr = conf_client["port_range"]
+        if not re.fullmatch("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$", pr):
+            raise InputError("The port format is not respected : 0-65535 (but it is : {})\n".format(pr))
+        else:
+            self.port_range = pr                                    # port range for test stream
+        
+        # Checked by owping program
         self.dhcp_value = conf_client["dhcp_value"]                 # dhcp value for test stream packets
     
