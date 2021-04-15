@@ -25,7 +25,7 @@ class Config_store():
         config_object.read(config_filename)
 
         # Server information
-        conf_server = config_object["CONFIG-SERVER"]
+        conf_server = config_object["owamp-server"]
         self.owamp_executable = conf_server["owamp_executable"]     # owamp executable
         self.user = conf_server["user"]                             # user that will execute the owamp server
         self.group = conf_server["group"]                           # group that will execute the owamp server
@@ -34,7 +34,7 @@ class Config_store():
         self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
 
         # Client information
-        conf_client = config_object["CONFIG-CLIENT"]
+        conf_client = config_object["owamp-client"]
         self.owping_executable = conf_client["owping_executable"]   # owping executable
         self.address_list = conf_client["address_list"].split(",")  # list of address list to ping
         ipv = int(conf_client["ip_version"])
