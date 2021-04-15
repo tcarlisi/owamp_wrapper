@@ -7,6 +7,7 @@ config_store.py
 import re 
 import fnmatch
 import configparser
+import os
 
 class InputError(Exception):
     """
@@ -24,18 +25,44 @@ class Config_store():
         config_object = configparser.ConfigParser()
         config_object.read(config_filename)
 
+        curr_dir = os.path.dirname(os.path.realpath(__file__))
+        owamp_dir = os.path.normpath(curr_dir + os.sep + os.pardir)
+
         # Server information
         conf_server = config_object["owamp-server"]
         self.owamp_executable = conf_server["owamp_executable"]     # owamp executable
+        if not self.owamp_executable:
+            self.owamp_executable = owamp_dir + "/Implementation/executables/bin/owampd"
+
+        self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
+        if not self.server_config_dir:
+            self.server_config_dir = owamp_dir + "/Implementation/config"
+
+        self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
+        if not self.dir_pid:
+            self.dir_pid = owamp_dir + "/Implementation/outputs/dir_pid"
+
+        self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
+        if not self.dir_test:
+            self.dir_test = owamp_dir + "/Implementation/outputs/dir_test"
+
         self.user = conf_server["user"]                             # user that will execute the owamp server
         self.group = conf_server["group"]                           # group that will execute the owamp server
-        self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
-        self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
-        self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
 
         # Client information
         conf_client = config_object["owamp-client"]
         self.owping_executable = conf_client["owping_executable"]   # owping executable
+        if not self.owping_executable:
+            self.owping_executable = owamp_dir + "/Implementation/executables/bin/owping"
+
+        pfs = conf_client["pfsfile"]
+        if not pfs:
+            pfs = owamp_dir + "/Implementation/config/owamp-server.pfs"
+
+        if not fnmatch.fnmatch(pfs, '*.pfs'):
+            raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
+        self.pfsfile = pfs                                          # the client pfs file
+
         self.address_list = conf_client["address_list"].split(",")  # list of address list to ping
         ipv = int(conf_client["ip_version"])
         if ipv != 0 and ipv != 4 and ipv != 6:
@@ -48,11 +75,6 @@ class Config_store():
             raise InputError("The packet number (in the config.ini file) must be an integer (but it is : {})\n".format(nbp))
         else:
             self.nb_packets = int(nbp)                              # nb of packets for each test stream
-
-        pfs = conf_client["pfsfile"] 
-        if not fnmatch.fnmatch(pfs, '*.pfs'):
-            raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
-        self.pfsfile = pfs                                          # the client pfs file
 
         # Checked by owping program
         self.schedule = conf_client["schedule"]                     # the schedule of the test stream

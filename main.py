@@ -8,7 +8,7 @@ import sys
 import time 
 import signal
 
-from .owamp_api import OwampApi, InputError, OwampStats
+from source.owamp_api import OwampApi, InputError, OwampStats
 
 def main():
 
@@ -16,7 +16,7 @@ def main():
     try:
         # Get info from config.ini and configure owamp
         print("Dev: OWAMP Config initialization...")
-        owamp.configure("../config.ini")
+        owamp.configure("./config.ini")
         # Start Owamp Server
         owamp.start_server()
         print("Dev: OWAMP Server started...")
