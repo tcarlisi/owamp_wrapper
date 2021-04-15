@@ -8,7 +8,7 @@ import sys
 import time 
 import signal
 
-from owamp_api import OwampApi, InputError, OwampStats
+from .owamp_api import OwampApi, InputError, OwampStats
 
 def main():
 

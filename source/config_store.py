@@ -6,7 +6,6 @@ config_store.py
 
 import re 
 import fnmatch
-
 import configparser
 
 class InputError(Exception):

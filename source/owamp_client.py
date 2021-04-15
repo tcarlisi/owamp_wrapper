@@ -4,10 +4,11 @@ owamp_client.py
 @author: Thomas Carlisi
 """
 import shlex
-from owamp_stats import OwampStats
-from config_store import Config_store
 import threading
 from subprocess import Popen, PIPE
+
+from .owamp_stats import OwampStats
+from .config_store import Config_store
 
 class OwampClient():
     """

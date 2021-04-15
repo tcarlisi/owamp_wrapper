@@ -7,9 +7,10 @@ owping_scheduler.py
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
 from datetime import datetime
-from owamp_client import OwampClient
-from owamp_stats import OwampStats
-from config_store import Config_store
+
+from .owamp_client import OwampClient
+from .owamp_stats import OwampStats
+from .config_store import Config_store
 
 class OwpingScheduler():
     """

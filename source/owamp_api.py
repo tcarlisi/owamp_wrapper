@@ -4,11 +4,11 @@ owamp_api.py
 @author: Thomas Carlisi
 """
 
-from config_store import Config_store, InputError
-from init_config import InitConfig
-from owamp_server import OwampServer
-from owping_scheduler import OwpingScheduler
-from owamp_stats import OwampStats
+from .config_store import Config_store, InputError
+from .init_config import InitConfig
+from .owamp_server import OwampServer
+from .owping_scheduler import OwpingScheduler
+from .owamp_stats import OwampStats
 
 class OwampApi():
     """

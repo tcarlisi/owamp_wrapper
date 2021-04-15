@@ -5,7 +5,7 @@ init_config.py
 """
 
 import fileinput
-from config_store import Config_store
+from .config_store import Config_store
 
 class InitConfig():
     """

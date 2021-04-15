@@ -7,8 +7,8 @@ import logging
 import shlex
 import os
 import signal
-from subprocess import Popen, PIPE
 import warnings
+from subprocess import Popen, PIPE
 
 class OwampServer():
     """
