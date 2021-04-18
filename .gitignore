@@ -5,3 +5,6 @@ source/__pycache__
 __pycache__
 .vscode
 source/.vscode
+Implementation/config/owamp-server.conf
+Implementation/config/owamp-server.limits
+Implementation/config/owamp-server.pfs
