@@ -1,19 +1,13 @@
-#Peut etre mieux d'installer depuis les repo
+#Requirement : Install Automake and libotool
 
-
-
-# Clone Owamp and I2Util
+cd Implementation
 git clone --recurse-submodules https://github.com/perfsonar/owamp.git
-cd owamp/I2util
-
-#Requirement : Install Automake if needed !!!!
-libtoolize --force
-aclaloc
-autoheader
-automake --force-missing --add-missing
-autoconf
-./configure
+mkdir executables
+mkdir outputs
+mkdir outputs/dir_test
+mkdir outputs/dir_pid
+cd owamp
+autoreconf -f -i
+./configure --prefix $PWD/../executables
 make
 make install
-
-

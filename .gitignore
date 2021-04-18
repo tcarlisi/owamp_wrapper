@@ -1,5 +1,6 @@
-Implementation/executables
-Implementation/outputs
-output
+Implementation/executables/
+Implementation/outputs/
+Implementation/owamp
+source/__pycache__
 .vscode
-source.vscode
+source/.vscode
