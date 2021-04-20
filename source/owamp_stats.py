@@ -4,6 +4,8 @@ owamp_stats.py
 @author: Thomas Carlisi
 """
 import shlex
+import os
+from atomicwrites import atomic_write
 
 class OwampStats():
     """
@@ -72,6 +74,10 @@ class OwampStats():
             else:
                 self.to_reordering = True
 
+            print(len(data))
+            if len(data) < 13:
+                return
+
             self.from_addr_from = data[2+11].split()[4]
             self.from_addr_to = data[2+11].split()[6]
             self.from_sid = data[3+11].split()[1]
@@ -89,6 +95,39 @@ class OwampStats():
                 self.from_reordering = False
             else:
                 self.from_reordering = True
+
+    def write_stats_in_file(self, directory, overwrite=True):
+
+        with atomic_write(directory + "/" + self.to_addr_to.split("[")[1].split("]")[0] + ".txt", overwrite=True) as f:
+            f.write(self.to_addr_from + os.linesep)
+            f.write(self.to_addr_to + os.linesep)
+            f.write(self.to_sid + os.linesep)
+            f.write(self.to_first + os.linesep)
+            f.write(self.to_last + os.linesep)
+            f.write(self.to_pkts_sent + os.linesep)
+            f.write(self.to_pkts_lost + os.linesep)
+            f.write(self.to_pkts_dup + os.linesep)
+            f.write(self.to_ow_del_min + os.linesep)
+            f.write(self.to_ow_del_med + os.linesep)
+            f.write(self.to_ow_del_max + os.linesep)
+            f.write(self.to_ow_jitter + os.linesep)
+            f.write(self.to_hops + os.linesep)
+            f.write(str(self.to_reordering) + os.linesep)
+
+            f.write(self.from_addr_from + os.linesep)
+            f.write(self.from_addr_to + os.linesep)
+            f.write(self.from_sid + os.linesep)
+            f.write(self.from_first + os.linesep)
+            f.write(self.from_last + os.linesep)
+            f.write(self.from_pkts_sent + os.linesep)
+            f.write(self.from_pkts_lost + os.linesep)
+            f.write(self.from_pkts_dup + os.linesep)
+            f.write(self.from_ow_del_min + os.linesep)
+            f.write(self.from_ow_del_med + os.linesep)
+            f.write(self.from_ow_del_max + os.linesep)
+            f.write(self.from_ow_jitter + os.linesep)
+            f.write(self.from_hops + os.linesep)
+            f.write(str(self.from_reordering) + os.linesep)
             
     def _debug_print_stats(self):
 

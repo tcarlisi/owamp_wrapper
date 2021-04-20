@@ -135,7 +135,7 @@ class OwampApi():
         self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail)
         self.scheduler.start_owping_scheduler()   
 
-    def stop_owping_scheduler():
+    def stop_owping_scheduler(self):
         """
         Stop the owmping scheduler.
         """

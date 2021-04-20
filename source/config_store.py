@@ -8,6 +8,7 @@ import re
 import fnmatch
 import configparser
 import os
+from pathlib import Path
 
 class InputError(Exception):
     """
@@ -30,7 +31,8 @@ class Config_store():
 
         # Server information
         conf_server = config_object["owamp-server"]
-        self.owamp_executable = conf_server["owamp_executable"]     # owamp executable
+        self.owamp_executable = conf_server["owamp_executable_dir"]     # owamp executable
+        self.server_ip = conf_server["server_ip"]                   # server ip
         if not self.owamp_executable:
             self.owamp_executable = owamp_dir + "/Implementation/executables/bin/owampd"
 
@@ -38,13 +40,20 @@ class Config_store():
         if not self.server_config_dir:
             self.server_config_dir = owamp_dir + "/Implementation/config"
 
+
         self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
         if not self.dir_pid:
             self.dir_pid = owamp_dir + "/Implementation/outputs/dir_pid"
+        
+        self.dir_pid += "/" + self.server_ip
+        Path(self.dir_pid).mkdir(parents=True, exist_ok=True)
 
         self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
         if not self.dir_test:
             self.dir_test = owamp_dir + "/Implementation/outputs/dir_test"
+        
+        self.dir_test += "/" + self.server_ip
+        Path(self.dir_test).mkdir(parents=True, exist_ok=True)
 
         self.user = conf_server["user"]                             # user that will execute the owamp server
         self.group = conf_server["group"]                           # group that will execute the owamp server

@@ -23,14 +23,14 @@ class OwampClient():
         self.port_range = config_store.port_range           # port range for stream test
         self.dhcp_value = config_store.dhcp_value           # dhcp value for stream test
         self.pfsfile = config_store.pfsfile                 # pfs file to authenticate client
-        self.executable = config_store.owping_executable   # owping executable
+        self.executable = config_store.owping_executable    # owping executable
 
     def owping(self):
         """
         Execute the owping and return the statistics (as OwampStats object)
         """
         cmd = (
-            self.executable + " " + self.address + ":8765"
+            self.executable + " " + self.address
             + " -c " + str(self.nb_packets)
             + " -i " + self.schedule
             + " -u admin"

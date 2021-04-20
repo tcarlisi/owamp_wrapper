@@ -24,6 +24,7 @@ class InitConfig():
         self._change_config_line(conf_file, "group", self.config_store.group)
         self._change_config_line(conf_file, "vardir", self.config_store.dir_pid)
         self._change_config_line(conf_file, "datadir", self.config_store.dir_test)
+        self._change_config_line(conf_file, "srcnode", self.config_store.server_ip)
 
     def _change_config_line(self, filename, prefix, value):
         try:
