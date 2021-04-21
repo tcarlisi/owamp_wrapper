@@ -8,7 +8,6 @@ import re
 import fnmatch
 import configparser
 import os
-from pathlib import Path
 
 class InputError(Exception):
     """
@@ -31,29 +30,22 @@ class Config_store():
 
         # Server information
         conf_server = config_object["owamp-server"]
-        self.owamp_executable = conf_server["owamp_executable_dir"]     # owamp executable
-        self.server_ip = conf_server["server_ip"]                   # server ip
+        self.owamp_executable = conf_server["owamp_executable"] # owamp executable
+        self.port = conf_server["port"]                             # server ip
         if not self.owamp_executable:
-            self.owamp_executable = owamp_dir + "/Implementation/executables/bin/owampd"
+            self.owamp_executable = self._add_file_to_dir("Implementation/executables/bin/owampd", owamp_dir)
 
         self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
         if not self.server_config_dir:
-            self.server_config_dir = owamp_dir + "/Implementation/config"
-
+            self.server_config_dir = self._add_file_to_dir("Implementation/config", owamp_dir)
 
         self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
         if not self.dir_pid:
-            self.dir_pid = owamp_dir + "/Implementation/outputs/dir_pid"
-        
-        self.dir_pid += "/" + self.server_ip
-        Path(self.dir_pid).mkdir(parents=True, exist_ok=True)
+            self.dir_pid = self._add_file_to_dir("Implementation/outputs/dir_pid", owamp_dir)
 
         self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
         if not self.dir_test:
-            self.dir_test = owamp_dir + "/Implementation/outputs/dir_test"
-        
-        self.dir_test += "/" + self.server_ip
-        Path(self.dir_test).mkdir(parents=True, exist_ok=True)
+            self.dir_test = self._add_file_to_dir("Implementation/outputs/dir_test", owamp_dir)
 
         self.user = conf_server["user"]                             # user that will execute the owamp server
         self.group = conf_server["group"]                           # group that will execute the owamp server
@@ -62,11 +54,11 @@ class Config_store():
         conf_client = config_object["owamp-client"]
         self.owping_executable = conf_client["owping_executable"]   # owping executable
         if not self.owping_executable:
-            self.owping_executable = owamp_dir + "/Implementation/executables/bin/owping"
+            self.owping_executable = self._add_file_to_dir("Implementation/executables/bin/owping", owamp_dir)
 
         pfs = conf_client["pfsfile"]
         if not pfs:
-            pfs = owamp_dir + "/Implementation/config/owamp-server.pfs"
+            pfs = self._add_file_to_dir("Implementation/config/owamp-server.pfs", owamp_dir)
 
         if not fnmatch.fnmatch(pfs, '*.pfs'):
             raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
@@ -96,4 +88,12 @@ class Config_store():
         
         # Checked by owping program
         self.dhcp_value = conf_client["dhcp_value"]                 # dhcp value for test stream packets
+
+    def _add_file_to_dir(self, filename:str, directory:str):
+
+        if(directory.endswith("/")):
+            output = directory + filename
+        else:
+            output = directory + "/" + filename
+        return output
     

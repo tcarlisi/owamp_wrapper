@@ -19,12 +19,12 @@ class InitConfig():
         """
         Modify the C owamp implementation configuration
         """
-        conf_file = self.config_store.server_config_dir + "/owamp-server.conf"
+        conf_file = self._add_file_to_dir("owamp-server.conf", self.config_store.server_config_dir)
         self._change_config_line(conf_file, "user", self.config_store.user)
         self._change_config_line(conf_file, "group", self.config_store.group)
         self._change_config_line(conf_file, "vardir", self.config_store.dir_pid)
         self._change_config_line(conf_file, "datadir", self.config_store.dir_test)
-        self._change_config_line(conf_file, "srcnode", self.config_store.server_ip)
+        self._change_config_line(conf_file, "srcnode", ":" + self.config_store.port)
 
     def _change_config_line(self, filename, prefix, value):
         try:
@@ -43,3 +43,11 @@ class InitConfig():
         except Exception as err:
             message = "configuration initialization failed:  {}\n".format(err)
             raise Exception(message) from err
+
+    def _add_file_to_dir(self, filename:str, directory:str):
+
+        if(directory.endswith("/")):
+            output = directory + filename
+        else:
+            output = directory + "/" + filename
+        return output
