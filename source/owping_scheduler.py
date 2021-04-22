@@ -40,7 +40,7 @@ class OwpingScheduler():
         """
         Shutdown the scheduler
         """
-        self.scheduler.shutdown(wait=False)
+        self.scheduler.shutdown(wait=True)
 
     def _scheduler_listener(self, event):
         if event.exception:
