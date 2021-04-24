@@ -34,7 +34,7 @@ class OwpingScheduler():
         self.scheduler.add_listener(self._scheduler_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
         self._create_owpingers()
         for owpinger in self.owpingers:
-            self.scheduler.add_job(owpinger.owping, trigger="interval", seconds=20, replace_existing=True, next_run_time=datetime.now())
+            self.scheduler.add_job(owpinger.owping, trigger="interval", seconds=self.config_store.ping_interval, replace_existing=True, next_run_time=datetime.now())
 
     def shutdown_owping_scheduler(self):
         """

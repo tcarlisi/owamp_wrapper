@@ -69,6 +69,7 @@ class Config_store():
         self.address_list = conf_client["address_list"]             # list of address list to ping
         self.address_list = self.address_list.split(",") if self.address_list else None
 
+        self.ping_interval = float(conf_client["ping_interval"])
         ipv = int(conf_client["ip_version"])
         if ipv != 0 and ipv != 4 and ipv != 6:
             raise InputError("The Ip version (in the config.ini file) must be 0, 4 or 6 (but it is : {})\n".format(ipv))
@@ -89,10 +90,10 @@ class Config_store():
             raise InputError("The port format is not respected : 0-65535 (but it is : {})\n".format(pr))
         else:
             self.port_range = pr                                    # port range for test stream
-        
+
         # Checked by owping program
         self.dhcp_value = conf_client["dhcp_value"]                 # dhcp value for test stream packets
-        self.timeout = int(conf_client["timeout"])
+        self.timeout = float(conf_client["timeout"])
         if not self.timeout:
             self.timeout = 2
 
