@@ -115,6 +115,9 @@ class OwampApi():
         It executes a ping at a fixed rate.
         (One ping per address in the list)
 
+        If there is no address in config file address_list attribute,
+        the scheduler is not lauched an no error is raised. 
+
         Parameters
         ----------
         callback : function
@@ -132,11 +135,15 @@ class OwampApi():
         if not callback_fail:
             raise Exception("Error owamp: a callback_fail function must be given\n")
 
-        self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail)
-        self.scheduler.start_owping_scheduler()   
+
+        if self.config_store.address_list:
+            print(self.config_store.address_list)
+            self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail)
+            self.scheduler.start_owping_scheduler()   
 
     def stop_owping_scheduler(self):
         """
         Stop the owmping scheduler.
         """
-        self.scheduler.shutdown_owping_scheduler()
+        if self.scheduler:
+            self.scheduler.shutdown_owping_scheduler()

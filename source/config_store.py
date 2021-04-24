@@ -64,7 +64,11 @@ class Config_store():
             raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
         self.pfsfile = pfs                                          # the client pfs file
 
-        self.address_list = conf_client["address_list"].split(",")  # list of address list to ping
+        # if the address_list is empty, make it equal to None
+        # else it is a list of ip (strings)
+        self.address_list = conf_client["address_list"]             # list of address list to ping
+        self.address_list = self.address_list.split(",") if self.address_list else None
+
         ipv = int(conf_client["ip_version"])
         if ipv != 0 and ipv != 4 and ipv != 6:
             raise InputError("The Ip version (in the config.ini file) must be 0, 4 or 6 (but it is : {})\n".format(ipv))
