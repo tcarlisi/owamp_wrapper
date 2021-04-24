@@ -92,6 +92,9 @@ class Config_store():
         
         # Checked by owping program
         self.dhcp_value = conf_client["dhcp_value"]                 # dhcp value for test stream packets
+        self.timeout = int(conf_client["timeout"])
+        if not self.timeout:
+            self.timeout = 2
 
     def _add_file_to_dir(self, filename:str, directory:str):
 

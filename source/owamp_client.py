@@ -24,6 +24,7 @@ class OwampClient():
         self.dhcp_value = config_store.dhcp_value           # dhcp value for stream test
         self.pfsfile = config_store.pfsfile                 # pfs file to authenticate client
         self.executable = config_store.owping_executable    # owping executable
+        self.timeout = config_store.timeout
 
     def owping(self):
         """
@@ -34,7 +35,8 @@ class OwampClient():
             + " -c " + str(self.nb_packets)
             + " -i " + self.schedule
             + " -u admin"
-            + " -k " + self.pfsfile)
+            + " -k " + self.pfsfile
+            + " -L " + str(self.timeout))
             
             
         if not self.ip_version == 0:

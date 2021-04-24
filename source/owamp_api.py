@@ -137,7 +137,6 @@ class OwampApi():
 
 
         if self.config_store.address_list:
-            print(self.config_store.address_list)
             self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail)
             self.scheduler.start_owping_scheduler()   
 
