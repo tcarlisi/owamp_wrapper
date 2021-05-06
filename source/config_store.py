@@ -69,6 +69,10 @@ class Config_store():
         self.address_list = conf_client["address_list"]             # list of address list to ping
         self.address_list = self.address_list.split(",") if self.address_list else None
 
+        self.max_threads = 10
+        if len(self.address_list) > 10:
+            self.max_threads = len(self.address_list)
+
         self.ping_interval = float(conf_client["ping_interval"])
         ipv = int(conf_client["ip_version"])
         if ipv != 0 and ipv != 4 and ipv != 6:

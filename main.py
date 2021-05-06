@@ -37,11 +37,17 @@ def main():
         print("Job worked")
         owamp_stats._debug_print_stats()
 
+    def scheduler_callback_ping_failed(owamp_stats:OwampStats):
+        print("Ping failed")    
+        message = "Owping for address {addr} did not work".format(addr=owamp_stats.address)
+        print(message)
+        print("owping program error:\n", stderr)
+
     def scheduler_callback_fail():
         print("Job failed")
 
     # Launch Owping (clients) Scheduler
-    owamp.start_owping_scheduler(scheduler_callback, scheduler_callback_fail)
+    owamp.start_owping_scheduler(scheduler_callback, scheduler_callback_fail, scheduler_callback_ping_failed)
     print("Dev: Owmping scheduler started..")
     signal.signal(signal.SIGINT, signal_handler)
 

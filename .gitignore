@@ -1,7 +1,6 @@
 Implementation/executables/
 Implementation/outputs/dir_test
 Implementation/outputs/dir_pid
-Implementation/outputs/dir_stats
 Implementation/owamp
 source/__pycache__
 __pycache__

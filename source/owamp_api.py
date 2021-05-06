@@ -109,7 +109,7 @@ class OwampApi():
             raise Exception("Error owamp: the server must be opened to be closed\n")
         self.server.close_owampd()
 
-    def start_owping_scheduler(self, callback, callback_fail):
+    def start_owping_scheduler(self, callback, callback_fail, callback_ping_failed):
         """
         Start the owmping scheduler. (the configuration MUST have been done before)
         It executes a ping at a fixed rate.
@@ -134,10 +134,12 @@ class OwampApi():
             raise Exception("Error owamp: a callback function must be given\n")
         if not callback_fail:
             raise Exception("Error owamp: a callback_fail function must be given\n")
+        if not callback_ping_failed:
+            raise Exception("Error owamp: a callback_fail function must be given\n")
 
 
         if self.config_store.address_list:
-            self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail)
+            self.scheduler = OwpingScheduler(self.config_store, callback, callback_fail, callback_ping_failed)
             self.scheduler.start_owping_scheduler()   
 
     def stop_owping_scheduler(self):

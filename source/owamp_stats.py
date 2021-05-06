@@ -13,6 +13,7 @@ class OwampStats():
     """
     def __init__(self):
         self.exit_code = 0
+        self.ping_success = False
         self.address = ""
 
 
@@ -98,6 +99,7 @@ class OwampStats():
     def write_stats_in_file(self, directory, overwrite=True):
 
         with atomic_write(directory + "/" + self.address + ".txt", overwrite=True) as f:
+            f.write("yes" + os.linesep)
             f.write(self.to_addr_from + os.linesep)
             f.write(self.to_addr_to + os.linesep)
             f.write(self.to_sid + os.linesep)
@@ -127,7 +129,14 @@ class OwampStats():
             f.write(str(self.from_ow_jitter) + os.linesep)
             f.write(str(self.from_hops) + os.linesep)
             f.write(str(self.from_reordering) + os.linesep)
-            
+
+    def write_error_in_file(self, directory, stderr, overwrite=True):
+
+        with atomic_write(directory + "/" + self.address + ".txt", overwrite=True) as f:   
+            error_msg = "no\nOwping for address {addr} did not work".format(addr=self.address)
+            error_msg += "\n" + stderr
+            f.write(error_msg)
+
     def _debug_print_stats(self):
 
         print("Ping TO")
