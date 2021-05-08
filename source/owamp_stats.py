@@ -98,7 +98,7 @@ class OwampStats():
 
     def write_stats_in_file(self, directory, overwrite=True):
 
-        with atomic_write(directory + "/" + self.address + ".txt", overwrite=True) as f:
+        with atomic_write(directory + "/" + self.address.split(":")[0] + ".txt", overwrite=True) as f:
             f.write("yes" + os.linesep)
             f.write(self.to_addr_from + os.linesep)
             f.write(self.to_addr_to + os.linesep)
