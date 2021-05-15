@@ -70,7 +70,7 @@ class Config_store():
         self.address_list = self.address_list.split(",") if self.address_list else None
 
         self.max_threads = 10
-        if len(self.address_list) > 10:
+        if self.address_list and len(self.address_list) > 10:
             self.max_threads = len(self.address_list)
 
         self.ping_interval = float(conf_client["ping_interval"])
