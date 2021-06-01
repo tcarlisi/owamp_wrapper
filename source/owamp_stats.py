@@ -76,9 +76,6 @@ class OwampStats():
                 self.to_reordering = 0
             else:
                 self.to_reordering = data[10].split()[2].split(".")[0]
-
-            if len(data) > 10:
-                return
             
             j = 11
             while j < len(data) and not data[j].startswith("---"):
