@@ -92,9 +92,10 @@ class Config_store():
         # IP version used by the owping
         ipv = conf_client["ip_version"] 
         if ipv:
-            self.ip_version = int(conf_client["ip_version"])
-            if ipv != 4 and ipv != 6:
+            ipv = int(ipv)
+            if not(ipv == 4 or ipv == 6):
                 raise InputError("The Ip version (in the config.ini file) must be 4 or 6 (but it is : {})\n".format(ipv))
+            self.ip_version = ipv
         else:
             self.ip_version = 0
 

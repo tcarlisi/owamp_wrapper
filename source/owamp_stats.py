@@ -77,9 +77,15 @@ class OwampStats():
             else:
                 self.to_reordering = data[10].split()[2].split(".")[0]
 
+            if len(data) > 10:
+                return
+            
             j = 11
-            while not data[j].startswith("---"):
+            while j < len(data) and not data[j].startswith("---"):
                 j += 1
+		
+            if j >= len(data):
+                return
 
             self.from_addr_from = data[j].split()[4]
             self.from_addr_to = data[j].split()[6]
