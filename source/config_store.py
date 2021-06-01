@@ -30,7 +30,7 @@ class Config_store():
 
         # Server information
         conf_server = config_object["owamp-server"]
-        self.owamp_executable = conf_server["owamp_executable"] # owamp executable
+        self.owamp_executable = conf_server["owamp_executable"]     # owamp executable
         self.port = conf_server["port"]                             # server ip
         if not self.owamp_executable:
             self.owamp_executable = self._add_file_to_dir("Implementation/executables/bin/owampd", owamp_dir)

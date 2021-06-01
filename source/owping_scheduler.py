@@ -48,6 +48,9 @@ class OwpingScheduler():
         self.scheduler.shutdown(wait=True)
 
     def _scheduler_listener(self, event):
+        """
+        The scheduler listener
+        """
         if event.exception:
             self.callback_fail()
         else:
@@ -60,6 +63,9 @@ class OwpingScheduler():
                 self.callback_ping_failed(owamp_stats, stderr)
 
     def _create_owpingers(self):
+        """
+        Create all the owamp clients
+        """
         for addr in self.address_list:
             owpinger = OwampClient(addr, self.config_store)
 
