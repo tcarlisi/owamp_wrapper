@@ -24,4 +24,4 @@ Then one needs to import and use the functions present in the owamp_api.py well 
 The scheduler frequency (ping interval) can be chosen. This value should be higher than the time to realize a ping. AN OWAMP ping is estimated to last : 
     1 + timeout + nb_pkts * send_schedule
 
-If this time is, for example equal to 10 seconds, choose a frequency of at least 11 seconds.
+If this time is, for example equal to 10 seconds, choose an interval of at least 11 seconds.
