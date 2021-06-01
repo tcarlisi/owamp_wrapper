@@ -20,7 +20,7 @@ The API consists in the following functions:
 First, one needs to modify the documented config.ini to choose the parameters you want.
 Then one needs to import and use the functions present in the owamp_api.py well documented source file.
 
-# A word on ping interval
+## A word on ping interval
 The scheduler frequency (ping interval) can be chosen. This value should be higher than the time to realize a ping. AN OWAMP ping is estimated to last : 
     1 + timeout + nb_pkts * send_schedule
 
