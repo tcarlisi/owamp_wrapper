@@ -37,7 +37,7 @@ def main():
         print("Job worked")
         owamp_stats._debug_print_stats()
 
-    def scheduler_callback_ping_failed(owamp_stats:OwampStats):
+    def scheduler_callback_ping_failed(owamp_stats:OwampStats, stderr):
         print("Ping failed")    
         message = "Owping for address {addr} did not work".format(addr=owamp_stats.address)
         print(message)
