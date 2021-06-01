@@ -30,7 +30,7 @@ class OwampStats():
         self.to_ow_del_max = 0 
         self.to_ow_jitter = 0
         self.to_hops = 0
-        self.to_reordering = False
+        self.to_reordering = 0
 
 
         self.from_addr_from = ""
@@ -46,13 +46,15 @@ class OwampStats():
         self.from_ow_del_max = 0 
         self.from_ow_jitter = 0
         self.from_hops = 0
-        self.from_reordering = False
+        self.from_reordering = 0
 
 
     def collect_stats(self, exit_code, address, data):
-
+        """
+        Collect stats from owping stdout
+        """
         self.exit_code = exit_code
-        self.address = address
+        self.address = address.split(":")[0]
 
         if exit_code == 0:
             data = data.splitlines()
@@ -71,34 +73,37 @@ class OwampStats():
             self.to_ow_jitter = data[8].split()[3]
             self.to_hops = data[9].split()[2]
             if(data[10].startswith("no")):
-                self.to_reordering = False
+                self.to_reordering = 0
             else:
-                self.to_reordering = True
+                self.to_reordering = data[10].split()[2].split(".")[0]
 
-            if len(data) < 13:
-                return
+            j = 11
+            while not data[j].startswith("---"):
+                j += 1
 
-            self.from_addr_from = data[2+11].split()[4]
-            self.from_addr_to = data[2+11].split()[6]
-            self.from_sid = data[3+11].split()[1]
-            self.from_first = data[4+11].split()[1]
-            self.from_last = data[5+11].split()[1]
-            self.from_pkts_sent = data[6+11].split()[0]
-            self.from_pkts_lost = data[6+11].split()[2]
-            self.from_pkts_dup = data[6+11].split()[5]
-            self.from_ow_del_min = data[7+11].split()[4].split("/")[0]
-            self.from_ow_del_med = data[7+11].split()[4].split("/")[1]
-            self.from_ow_del_max = data[7+11].split()[4].split("/")[2]
-            self.from_ow_jitter = data[8+11].split()[3]
-            self.from_hops = data[9+11].split()[2]
-            if(data[10+11].startswith("no")):
-                self.from_reordering = False
+            self.from_addr_from = data[j].split()[4]
+            self.from_addr_to = data[j].split()[6]
+            self.from_sid = data[1+j].split()[1]
+            self.from_first = data[2+j].split()[1]
+            self.from_last = data[3+j].split()[1]
+            self.from_pkts_sent = data[4+j].split()[0]
+            self.from_pkts_lost = data[4+j].split()[2]
+            self.from_pkts_dup = data[4+j].split()[5]
+            self.from_ow_del_min = data[5+j].split()[4].split("/")[0]
+            self.from_ow_del_med = data[5+j].split()[4].split("/")[1]
+            self.from_ow_del_max = data[5+j].split()[4].split("/")[2]
+            self.from_ow_jitter = data[6+j].split()[3]
+            self.from_hops = data[7+j].split()[2]
+            if(data[8+j].startswith("no")):
+                self.from_reordering = 0
             else:
-                self.from_reordering = True
+                self.from_reordering = data[8+j].split()[2].split(".")[0]
 
     def write_stats_in_file(self, directory, overwrite=True):
-
-        with atomic_write(directory + "/" + self.address.split(":")[0] + ".txt", overwrite=True) as f:
+        """
+        Write statistics in file "'self.address'.txt" in a given directory
+        """
+        with atomic_write(directory + "/" + self.address + ".txt", overwrite=True) as f:
             f.write("yes" + os.linesep)
             f.write(self.to_addr_from + os.linesep)
             f.write(self.to_addr_to + os.linesep)
@@ -131,7 +136,9 @@ class OwampStats():
             f.write(str(self.from_reordering) + os.linesep)
 
     def write_error_in_file(self, directory, stderr, overwrite=True):
-
+        """
+        Write error in file "'self.address'.txt" in a given directory
+        """
         with atomic_write(directory + "/" + self.address + ".txt", overwrite=True) as f:   
             error_msg = "no\nOwping for address {addr} did not work".format(addr=self.address)
             error_msg += "\n" + stderr

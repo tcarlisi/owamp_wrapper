@@ -30,73 +30,100 @@ class Config_store():
 
         # Server information
         conf_server = config_object["owamp-server"]
-        self.owamp_executable = conf_server["owamp_executable"] # owamp executable
-        self.port = conf_server["port"]                             # server ip
+        # owamp executable
+        self.owamp_executable = conf_server["owamp_executable"]
+
+        # server port
+        self.port = conf_server["port"]
         if not self.owamp_executable:
             self.owamp_executable = self._add_file_to_dir("Implementation/executables/bin/owampd", owamp_dir)
 
-        self.server_config_dir = conf_server["server_config_dir"]   # server configuration directory
+        # server configuration directory
+        self.server_config_dir = conf_server["server_config_dir"]
         if not self.server_config_dir:
             self.server_config_dir = self._add_file_to_dir("Implementation/config", owamp_dir)
 
-        self.dir_pid = conf_server["dir_pid"]                       # directory that will contain the owampd pid file
+         # directory that will contain the owampd pid file
+        self.dir_pid = conf_server["dir_pid"]
         if not self.dir_pid:
             self.dir_pid = self._add_file_to_dir("Implementation/outputs/dir_pid", owamp_dir)
 
-        self.dir_test = conf_server["dir_test"]                     # directory that will contain test temporary files
+        # directory that will contain test temporary files
+        self.dir_test = conf_server["dir_test"]
         if not self.dir_test:
             self.dir_test = self._add_file_to_dir("Implementation/outputs/dir_test", owamp_dir)
 
-        self.user = conf_server["user"]                             # user that will execute the owamp server
-        self.group = conf_server["group"]                           # group that will execute the owamp server
+        # user that will execute the owamp server
+        self.user = conf_server["user"]
 
-        # Client information
+        # group that will execute the owamp server
+        self.group = conf_server["group"]
+
+        ## Client information
         conf_client = config_object["owamp-client"]
-        self.owping_executable = conf_client["owping_executable"]   # owping executable
+        # owping executable
+        self.owping_executable = conf_client["owping_executable"]
         if not self.owping_executable:
             self.owping_executable = self._add_file_to_dir("Implementation/executables/bin/owping", owamp_dir)
 
+        # pfs file
         pfs = conf_client["pfsfile"]
         if not pfs:
             pfs = self._add_file_to_dir("Implementation/config/owamp-server.pfs", owamp_dir)
 
         if not fnmatch.fnmatch(pfs, '*.pfs'):
             raise InputError("The pfs file must be a valid filename with extension '.pfs' (but it is : {})\n".format(pfs))
-        self.pfsfile = pfs                                          # the client pfs file
+        self.pfsfile = pfs
 
+        # list of address list to ping
         # if the address_list is empty, make it equal to None
         # else it is a list of ip (strings)
-        self.address_list = conf_client["address_list"]             # list of address list to ping
+        self.address_list = conf_client["address_list"]
         self.address_list = self.address_list.split(",") if self.address_list else None
 
+        # Max Threads
         self.max_threads = 10
         if self.address_list and len(self.address_list) > 10:
             self.max_threads = len(self.address_list)
 
+        # Ping interval
         self.ping_interval = float(conf_client["ping_interval"])
-        ipv = int(conf_client["ip_version"])
-        if ipv != 0 and ipv != 4 and ipv != 6:
-            raise InputError("The Ip version (in the config.ini file) must be 0, 4 or 6 (but it is : {})\n".format(ipv))
-        else:
-            self.ip_version = ipv                                   # IP version used by the owping
 
+        # IP version used by the owping
+        ipv = conf_client["ip_version"] 
+        if ipv:
+            self.ip_version = int(conf_client["ip_version"])
+            if ipv != 4 and ipv != 6:
+                raise InputError("The Ip version (in the config.ini file) must be 4 or 6 (but it is : {})\n".format(ipv))
+        else:
+            self.ip_version = 0
+
+        # nb of packets for each test stream
         nbp = conf_client["nb_packets"]
         if not nbp.isnumeric():
             raise InputError("The packet number (in the config.ini file) must be an integer (but it is : {})\n".format(nbp))
         else:
-            self.nb_packets = int(nbp)                              # nb of packets for each test stream
+            self.nb_packets = int(nbp)
 
-        # Checked by owping program
-        self.schedule = conf_client["schedule"]                     # the schedule of the test stream
+        # the schedule of the test stream
+        self.schedule = conf_client["schedule"]
         
+        # port range for test stream
         pr = conf_client["port_range"]
-        if not re.fullmatch("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$", pr):
-            raise InputError("The port format is not respected : 0-65535 (but it is : {})\n".format(pr))
+        if pr:
+            if not re.fullmatch("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$", pr):
+                raise InputError("The port format is not respected : 0-65535 (but it is : {})\n".format(pr))
+            self.port_range = pr
         else:
-            self.port_range = pr                                    # port range for test stream
+            self.port_range = None
 
-        # Checked by owping program
-        self.dhcp_value = conf_client["dhcp_value"]                 # dhcp value for test stream packets
+        # dhcp value for test stream packets
+        dhcp = conf_client["dhcp_value"]
+        if dhcp:
+            self.dhcp_value = dhcp
+        else:
+            self.dhcp_value = None
+            
         self.timeout = float(conf_client["timeout"])
         if not self.timeout:
             self.timeout = 2
