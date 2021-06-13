@@ -5,7 +5,9 @@ owamp_client.py
 """
 import shlex
 import threading
-from subprocess import Popen, PIPE
+import signal
+
+from subprocess import Popen, PIPE, TimeoutExpired
 
 from .owamp_stats import OwampStats
 from .config_store import Config_store
@@ -25,6 +27,7 @@ class OwampClient():
         self.pfsfile = config_store.pfsfile                 # pfs file to authenticate client
         self.executable = config_store.owping_executable    # owping executable
         self.timeout = config_store.timeout
+        self.ping_interval = config_store.ping_interval
 
     def owping(self):
         """
@@ -52,10 +55,15 @@ class OwampClient():
             cmd += " -D " + self.dhcp_value
         
 
-
         # Execution of Owping
         process = Popen(shlex.split(cmd), stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
+
+        try:
+            stdout, stderr = process.communicate(timeout=self.ping_interval)
+        except TimeoutExpired:
+            process.send_signal(signal.SIGINT)
+            stdout, stderr = process.communicate()
+
         exit_code = process.wait()
 
         # Analalyze statistics
